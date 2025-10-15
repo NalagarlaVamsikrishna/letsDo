@@ -5,26 +5,41 @@ import Tasklist from './Tasklist'
 import Progresstracker from './Progresstracker'
 
 export default function App() {
-  const [tasks, settasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   
   useEffect(() => {
    localStorage.setItem("tasks", JSON.stringify(tasks));
   })
 
   const addTask = (task) => {
-    settasks([...tasks,task]);
+    setTasks([...tasks,task]);
   }
 
+  const updateTask = (updatedTask, index)=>{
+    const newtask = [...tasks];
+    newtask[index] = updatedTask;
+    setTasks(newtask);
+  }
+
+  const deleteTask = (index) => {
+    setTasks(tasks.filter((_, i) => i !=index))
+  }
+
+  const clearTasks = () => {
+    setTasks([]);
+  }
   return (
-    <div>
-      <h1>Daily Progress</h1>
-      <p>Let's do our work</p>
+    <div className='App'>
+      <header>
+      <h1 className='title'>Daily Progress</h1>
+      <p className='tagline'>Let's do our work</p>
+      </header>
       <Taskform addTask={addTask}/>
       <Tasklist tasks = {tasks} 
       updateTask = {updateTask}
       deleteTask = {deleteTask}/>
-      <Progresstracker />
-      <button>Clear all Components</button>
+      <Progresstracker task = {tasks}/>
+      {tasks.length>0 && (<button onClick={clearTasks}>Clear all Components</button>)}
     </div>
   )
 }
